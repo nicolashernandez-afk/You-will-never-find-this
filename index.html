@@ -5,43 +5,45 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GitHub YouTube Player</title>
     <style>
-        body { font-family: sans-serif; display: flex; flex-direction: column; align-items: center; padding: 50px; background: #f4f4f4; }
-        .container { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); width: 100%; max-width: 600px; text-align: center; }
-        input { width: 80%; padding: 10px; margin-bottom: 20px; border: 1px solid #ccc; border-radius: 5px; }
-        button { padding: 10px 20px; cursor: pointer; background: #ff0000; color: white; border: none; border-radius: 5px; font-weight: bold; }
-        #video-container { margin-top: 20px; width: 100%; aspect-ratio: 16/9; display: none; }
-        iframe { width: 100%; height: 100%; border-radius: 5px; border: none; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; margin: 0; background: #121212; color: white; }
+        .container { background: #1e1e1e; padding: 30px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); width: 90%; max-width: 800px; text-align: center; }
+        h2 { margin-bottom: 20px; color: #ff0000; }
+        input { width: 100%; padding: 12px; margin-bottom: 15px; border: 2px solid #333; border-radius: 8px; background: #2c2c2c; color: white; box-sizing: border-box; font-size: 16px; }
+        input:focus { border-color: #ff0000; outline: none; }
+        button { padding: 12px 30px; cursor: pointer; background: #ff0000; color: white; border: none; border-radius: 8px; font-weight: bold; font-size: 16px; transition: 0.3s; }
+        button:hover { background: #cc0000; transform: scale(1.05); }
+        #video-container { margin-top: 25px; width: 100%; aspect-ratio: 16/9; display: none; overflow: hidden; border-radius: 8px; border: 1px solid #333; }
+        iframe { width: 100%; height: 100%; border: none; }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <h2>YouTube Video Player</h2>
-        <input type="text" id="videoLink" placeholder="Paste YouTube link here (e.g., https://www.youtube.com...)">
-        <br>
-        <button onclick="playVideo()">Play Video</button>
+        <h2>YouTube Link Player</h2>
+        <input type="text" id="videoLink" placeholder="Paste any YouTube link here...">
+        <button onclick="playVideo()">Load Video</button>
         
         <div id="video-container">
-            <iframe id="player" src="" allowfullscreen></iframe>
+            <iframe id="player" src="" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
         </div>
     </div>
 
     <script>
         function playVideo() {
-            const urlInput = document.getElementById('videoLink').value;
+            const urlInput = document.getElementById('videoLink').value.trim();
             const container = document.getElementById('video-container');
             const iframe = document.getElementById('player');
             
-            // Extract Video ID from common YouTube URL formats
-            const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+            // This Regex handles watch?v=, youtu.be/, embed/, and /shorts/ formats
+            const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=|shorts\/)([^#\&\?]*).*/;
             const match = urlInput.match(regExp);
 
             if (match && match[2].length === 11) {
-                const videoId = match[2];
-                iframe.src = `https://www.youtube.com{videoId}`;
+                const videoId = match[2]; // Extracts the 11-character ID
+                iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1`; // Sets the embed source
                 container.style.display = 'block';
             } else {
-                alert("Please enter a valid YouTube URL.");
+                alert("Invalid YouTube link. Please check the URL and try again.");
             }
         }
     </script>
