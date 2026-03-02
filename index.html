@@ -3,50 +3,50 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GitHub YouTube Player</title>
+    <title>Unblocked Video Player</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; margin: 0; background: #121212; color: white; }
-        .container { background: #1e1e1e; padding: 30px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); width: 90%; max-width: 800px; text-align: center; }
-        h2 { margin-bottom: 20px; color: #ff0000; }
-        input { width: 100%; padding: 12px; margin-bottom: 15px; border: 2px solid #333; border-radius: 8px; background: #2c2c2c; color: white; box-sizing: border-box; font-size: 16px; }
-        input:focus { border-color: #ff0000; outline: none; }
-        button { padding: 12px 30px; cursor: pointer; background: #ff0000; color: white; border: none; border-radius: 8px; font-weight: bold; font-size: 16px; transition: 0.3s; }
-        button:hover { background: #cc0000; transform: scale(1.05); }
-        #video-container { margin-top: 25px; width: 100%; aspect-ratio: 16/9; display: none; overflow: hidden; border-radius: 8px; border: 1px solid #333; }
+        body { font-family: sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; background: #1a1a1a; color: #eee; margin: 0; }
+        .box { background: #2a2a2a; padding: 30px; border-radius: 15px; box-shadow: 0 8px 32px rgba(0,0,0,0.5); width: 90%; max-width: 700px; text-align: center; border: 1px solid #444; }
+        h2 { color: #ff4444; margin-bottom: 20px; }
+        input { width: 100%; padding: 12px; margin: 10px 0; border: 2px solid #444; border-radius: 8px; background: #333; color: white; box-sizing: border-box; }
+        button { width: 100%; padding: 12px; background: #ff4444; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.2s; }
+        button:hover { background: #cc0000; }
+        #player-wrap { margin-top: 25px; width: 100%; aspect-ratio: 16/9; display: none; border-radius: 8px; overflow: hidden; }
         iframe { width: 100%; height: 100%; border: none; }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <h2>YouTube Link Player</h2>
-        <input type="text" id="videoLink" placeholder="Paste any YouTube link here...">
-        <button onclick="playVideo()">Load Video</button>
+    <div class="box">
+        <h2>Unblocked Player</h2>
+        <p>This uses an <b>Invidious Instance</b> to bypass domain blocks.</p>
+        <input type="text" id="link" placeholder="Paste YouTube link (e.g., watch?v=...)">
+        <button onclick="loadVideo()">Load Video</button>
         
-        <div id="video-container">
-            <iframe id="player" src="" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        <div id="player-wrap">
+            <iframe id="vidFrame" allowfullscreen></iframe>
         </div>
     </div>
 
     <script>
-        function playVideo() {
-            const urlInput = document.getElementById('videoLink').value.trim();
-            const container = document.getElementById('video-container');
-            const iframe = document.getElementById('player');
-            
-            // This Regex handles watch?v=, youtu.be/, embed/, and /shorts/ formats
+        function loadVideo() {
+            const input = document.getElementById('link').value.trim();
+            const frame = document.getElementById('vidFrame');
+            const wrap = document.getElementById('player-wrap');
+
+            // Extract Video ID
             const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=|shorts\/)([^#\&\?]*).*/;
-            const match = urlInput.match(regExp);
+            const match = input.match(regExp);
 
             if (match && match[2].length === 11) {
-                const videoId = match[2]; // Extracts the 11-character ID
-                iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1`; // Sets the embed source
-                container.style.display = 'block';
+                const videoId = match[2];
+                // Using yewtu.be (a popular Invidious instance) instead of youtube.com
+                frame.src = `https://yewtu.be{videoId}?autoplay=1`;
+                wrap.style.display = 'block';
             } else {
-                alert("Invalid YouTube link. Please check the URL and try again.");
+                alert("Please enter a valid YouTube link.");
             }
         }
     </script>
-
 </body>
 </html>
